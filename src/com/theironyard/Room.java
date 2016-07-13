@@ -11,6 +11,7 @@ public class Room{
     boolean wasVisited = false;
 
 
+
     public Room(int row, int col, boolean hasBottom, boolean hasRight, boolean wasVisited) {
         this.row = row;
         this.col = col;

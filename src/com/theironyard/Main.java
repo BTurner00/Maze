@@ -1,11 +1,13 @@
 package com.theironyard;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.stream.Collectors;
 
 public class Main {
-    static final int SIZE = 15;
+    static final int SIZE = 10;
+    static ArrayList<Room> x = new ArrayList<>();
 
     static Room[][] createRooms(){
         Room[][] rooms = new Room[SIZE][SIZE];
@@ -49,7 +51,6 @@ public class Main {
             int index = r.nextInt(neighbors.size());
             return neighbors.get(index);
         }
-
         return null;
     }
 
@@ -70,8 +71,12 @@ public class Main {
 
     static boolean createMaze(Room[][] rooms, Room room) {
         room.wasVisited = true;
+        boolean end = false;
         Room nextRoom = randomNeighbor(rooms, room.row, room.col);
-        if (nextRoom == null) return false;
+        if (nextRoom == null) {
+            x.add(room);
+            return false;
+        }
 
         tearDownWall(room, nextRoom);
         while (createMaze(rooms, nextRoom));
@@ -79,6 +84,8 @@ public class Main {
     }
 
     public static void main(String[] args) {
+        boolean start = true;
+        int ends = 0;
         Room[][] rooms = createRooms();
         createMaze(rooms, rooms[0][0]);
         for (Room[] row : rooms) {
@@ -86,15 +93,23 @@ public class Main {
         }
         System.out.println();
 
+
         for (Room[] row: rooms) {
             System.out.print("|");
             for (Room room: row) {
-                System.out.print(room.hasBottom ? "_" : " ");
+                if (start) {
+                    System.out.print("o");
+                    start = false;
+                } else if (room == x.get(0) && ends < 1) {
+                    System.out.print("x");
+                    ends++;
+                } else {
+                    System.out.print(room.hasBottom ? "_" : " ");
+                }
                 System.out.print(room.hasRight ? "|" : " ");
             }
             System.out.println();
         }
-
 
 
     }
